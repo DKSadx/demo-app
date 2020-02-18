@@ -1,0 +1,10 @@
+server.port: ${MONITOR_PORT}
+
+spring.cloud.config:
+    discovery.enabled: false
+    fail-fast: false
+
+turbine:
+  appConfig: biz-application, admin-application, news-application, proxy-server
+  clusterNameExpression: "'default'"
+  instanceUrlSuffix: application/hystrix.stream

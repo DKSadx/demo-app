@@ -1,0 +1,19 @@
+server.port: ${DB_PORT}
+
+spring:
+  application.name: biz-application
+  cloud.config:
+    discovery.enabled: false
+    fail-fast: false
+  jpa:
+    hibernate.ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: ${DB_URL}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+eureka.client:
+  registerWithEureka: false
+  fetchRegistry: false

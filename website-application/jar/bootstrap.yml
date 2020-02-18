@@ -1,0 +1,18 @@
+server.port: ${WEBSITE_PORT}
+
+spring.cloud.config:
+    discovery.enabled: false
+    fail-fast: false
+
+eureka.client:
+    registerWithEureka: false
+    fetchRegistry: false
+
+hazelcast.max.no.heartbeat.seconds: 60
+
+admin-application.url: ${ADMIN_URL}:${ADMIN_PORT}/ui/
+
+news-application.url: ${NEWS_URL}:${NEWS_PORT}/ui/
+
+vaadin.urlMapping: /ui/*
+server.servlet.context-path: /

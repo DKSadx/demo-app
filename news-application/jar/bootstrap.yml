@@ -1,0 +1,27 @@
+server.port: ${NEWS_PORT}
+
+spring:
+  application.name: news-application
+  cloud.config:
+    discovery.enabled: false
+    fail-fast: false
+
+eureka.client:
+    registerWithEureka: false
+    fetchRegistry: false
+
+ribbon:
+  serverListRefreshInterval: 1000
+  ConnectTimeout: 6000
+  ReadTimeout: 3000
+
+hystrix.commanddefault.execution.isolation.thread.timeoutInMilliseconds: 10000
+
+feign.hystrix.enabled: true
+
+hazelcast.max.no.heartbeat.seconds: 60
+
+biz-application.url: ${BIZ_URL}:${BIZ_PORT}
+
+vaadin.urlMapping: /ui/*
+server.servlet.context-path: /
