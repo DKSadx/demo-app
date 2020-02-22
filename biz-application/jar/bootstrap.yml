@@ -1,4 +1,4 @@
-server.port: ${DB_PORT}
+server.port: ${BIZ_PORT}
 
 spring:
   application.name: biz-application

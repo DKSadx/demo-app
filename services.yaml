@@ -1,0 +1,92 @@
+# ---------------------- POSTGRESQL - SERVICE ------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+spec:
+  selector:
+    name: postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+      name: postgres
+
+# ---------------------- BIZ - SERVICE ------------------------------
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: biz
+spec:
+  selector:
+    name: biz
+  ports:
+    - protocol: TCP
+      port: 9001
+      targetPort: 9001
+      name: biz
+
+# ---------------------- ADMIN - SERVICE ------------------------------
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin
+spec:
+  selector:
+    name: admin
+  ports:
+    - protocol: TCP
+      port: 9101
+      nodePort: 30101
+      name: admin
+  type: LoadBalancer
+
+# ---------------------- NEWS - SERVICE ------------------------------
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: news
+spec:
+  selector:
+    name: news
+  ports:
+    - protocol: TCP
+      port: 9201
+      nodePort: 30201
+      name: news
+  type: LoadBalancer
+
+# ---------------------- WEBSITE - SERVICE ------------------------------
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: website
+spec:
+  selector:
+    name: website
+  ports:
+    - protocol: TCP
+      port: 9301
+      nodePort: 30301
+      name: website
+  type: LoadBalancer
+
+# ---------------------- MONITOR - SERVICE ------------------------------
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+  #name: monitor
+#spec:
+  #selector:
+    #name: monitor
+  #ports:
+    #- protocol: TCP
+      #port: 8201
+      #nodePort: 31201
+      #name: monitor
+  #type: LoadBalancer
