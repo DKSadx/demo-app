@@ -1,8 +1,23 @@
+K8s secrets.yaml
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-secrets
+type: Opaque
+data:
+  username: _____(base64)
+  password: _____(base64)
+  db: _____(base64)
+```
+
 # Microservices with Vaadin demo application
 
 ## Build the app
 
 Run the following from the command line:
+
 ```
 git clone https://github.com/momerkic/demo-app.git
 cd demo-app
@@ -16,24 +31,28 @@ Ensure that postgresql-10 is running. Create user demo with password 'demo'. Cre
 Use multiple terminals to perform the following steps:
 
 **1) Start an instance of the `biz-application` microservice (REST app):**
+
 ```
 cd demo-app/biz-application
 java -jar target/biz-application-0.0.1-SNAPSHOT.jar
 ```
 
 **2) Start an instance of the `admin-application` microservice (Vaadin app):**
+
 ```
 cd demo-app/admin-application
 java -jar target/admin-application-0.0.1-SNAPSHOT.jar
 ```
 
 **3) Start an instance of the `news-application` microservice (Vaadin app):**
+
 ```
 cd demo-app/news-application
 java -jar target/news-application-0.0.1-SNAPSHOT.jar
 ```
 
 **4) Start an instance of the `website-application` microservice (Vaadin app):**
+
 ```
 cd demo-app/website-application
 java -jar target/website-application-0.0.1-SNAPSHOT.jar

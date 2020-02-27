@@ -21,11 +21,20 @@ spec:
             - containerPort: 5432
           env:
             - name: POSTGRES_USER
-              value: 'demo'
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: username
             - name: POSTGRES_PASSWORD
-              value: 'demo'
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: password
             - name: POSTGRES_DB
-              value: 'demo'
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: db
 
 ---
 # ---------------------- BIZ - DEPLOYMENT ------------------------------
@@ -51,15 +60,27 @@ spec:
             - containerPort: 9001
           env:
             - name: BIZ_PORT
-              value: '9001'
+              valueFrom:
+                configMapKeyRef:
+                  name: configs
+                  key: bizPort
             - name: DB_URL
               value: 'jdbc:postgresql://$(POSTGRES_SERVICE_HOST):5432'
             - name: DB_NAME
-              value: 'demo'
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: db
             - name: DB_USER
-              value: 'demo'
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: username
             - name: DB_PASSWORD
-              value: 'demo'
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: password
 
 # ---------------------- ADMIN - DEPLOYMENT ------------------------------
 ---
@@ -89,7 +110,10 @@ spec:
             - name: BIZ_PORT
               value: "$(BIZ_SERVICE_PORT)"
             - name: ADMIN_PORT
-              value: "9101"
+              valueFrom:
+                configMapKeyRef:
+                  name: configs
+                  key: adminPort
 
 # ---------------------- NEWS - DEPLOYMENT ------------------------------
 ---
@@ -115,11 +139,20 @@ spec:
             - containerPort: 9201
           env:
             - name: BIZ_URL
-              value: "http://192.168.99.113"
+              valueFrom:
+                configMapKeyRef:
+                  name: configs
+                  key: clusterIp
             - name: BIZ_PORT
-              value: "30001"
+              valueFrom:
+                configMapKeyRef:
+                  name: configs
+                  key: bizNodePort
             - name: NEWS_PORT
-              value: "9201"
+              valueFrom:
+                configMapKeyRef:
+                  name: configs
+                  key: newsPort
 
 # ---------------------- WEBSITE - DEPLOYMENT ------------------------------
 ---
@@ -145,15 +178,30 @@ spec:
             - containerPort: 9301
           env:
             - name: ADMIN_URL
-              value: "http://192.168.99.113"
+              valueFrom:
+                configMapKeyRef:
+                  name: configs
+                  key: clusterIp
             - name: ADMIN_PORT
-              value: "30101"
+              valueFrom:
+                configMapKeyRef:
+                  name: configs
+                  key: adminNodePort
             - name: NEWS_URL
-              value: "http://192.168.99.113"
+              valueFrom:
+                configMapKeyRef:
+                  name: configs
+                  key: clusterIp
             - name: NEWS_PORT
-              value: "30201"
+              valueFrom:
+                configMapKeyRef:
+                  name: configs
+                  key: newsNodePort
             - name: WEBSITE_PORT
-              value: "9301"
+              valueFrom:
+                configMapKeyRef:
+                  name: configs
+                  key: websitePort
 
 #---
 ## ---------------------- MONITOR - DEPLOYMENT ------------------------------
