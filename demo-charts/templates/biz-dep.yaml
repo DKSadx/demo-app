@@ -12,6 +12,10 @@ spec:
       labels:
         name: {{ .Values.biz.dep.labelName }}
     spec:
+      initContainers:  # check if DB is ready, and only continue when true
+      - name: check-db-ready
+        image: postgres:10
+        command: ['sh', '-c', 'until pg_isready -h {{ .Values.postgres.svc.name }} -p {{ .Values.postgres.svc.port }};  do echo waiting for database; sleep 2; done;']
       containers:
         - name: biz
           image: {{ .Values.biz.dep.image }}
