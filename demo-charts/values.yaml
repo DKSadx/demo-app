@@ -1,0 +1,86 @@
+minikubeIP: 'http://192.168.99.113'
+
+secrets:
+  username:
+  password:
+  db:
+
+# ----- PostgreSQL -----
+
+postgres:
+  dep:
+    name: 'postgres'
+    labelName: 'postgres'
+    replicaCount: 1
+    image: 'postgres:10'
+    imagePullPolicy: 'IfNotPresent'
+    containerPort: '5432'
+  svc:
+    name: 'postgres-svc'
+    port: '5432'
+    type: 'ClusterIP'
+
+# ----- Biz -----
+
+biz:
+  dep:
+    name: 'biz'
+    labelName: 'biz'
+    replicaCount: 1
+    image: 'dkabh/biz:run'
+    imagePullPolicy: 'IfNotPresent'
+    containerPort: '9001'
+    dbURL: 'jdbc:postgresql://postgres-svc:5432'
+  svc:
+    name: 'biz-svc'
+    port: '9001'
+    #nodePort: '30001'
+    type: 'ClusterIP'
+
+# ----- Website -----
+
+website:
+  dep:
+    name: 'website'
+    labelName: 'website'
+    replicaCount: 1
+    image: 'dkabh/website:run'
+    imagePullPolicy: 'IfNotPresent'
+    containerPort: '9301'
+  svc:
+    name: 'website-svc'
+    port: '9301'
+    nodePort: '30301'
+    type: 'LoadBalancer'
+
+# ----- Admin -----
+
+admin:
+  dep:
+    name: 'admin'
+    labelName: 'admin'
+    replicaCount: 1
+    image: 'dkabh/admin:run'
+    imagePullPolicy: 'IfNotPresent'
+    containerPort: '9101'
+  svc:
+    name: 'admin-svc'
+    port: '9101'
+    nodePort: '30101'
+    type: 'LoadBalancer'
+
+# ----- News -----
+
+news:
+  dep:
+    name: 'news'
+    labelName: 'news'
+    replicaCount: 1
+    image: 'dkabh/news:run'
+    imagePullPolicy: 'IfNotPresent'
+    containerPort: '9201'
+  svc:
+    name: 'news-svc'
+    port: '9201'
+    nodePort: '30201'
+    type: 'LoadBalancer'

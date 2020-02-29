@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.news.dep.name }}
+spec:
+  replicas: {{ .Values.news.dep.replicaCount }}
+  selector:
+    matchLabels:
+      name: {{ .Values.news.dep.labelName }}
+  template:
+    metadata:
+      labels:
+        name: {{ .Values.news.dep.labelName }}
+    spec:
+      containers:
+        - name: news
+          image: {{ .Values.news.dep.image }}
+          imagePullPolicy: {{ .Values.news.dep.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.news.dep.containerPort }}
+          env:
+            - name: BIZ_URL
+              value: "{{ .Values.minikubeIP }}"
+            - name: BIZ_PORT
+              value: "{{ .Values.biz.svc.nodePort }}"
+            - name: NEWS_PORT
+              value: "{{ .Values.news.dep.containerPort }}"

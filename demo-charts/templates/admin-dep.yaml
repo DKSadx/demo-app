@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.admin.dep.name }}
+spec:
+  replicas: {{ .Values.admin.dep.replicaCount }}
+  selector:
+    matchLabels:
+      name: {{ .Values.admin.dep.labelName }}
+  template:
+    metadata:
+      labels:
+        name: {{ .Values.admin.dep.labelName }}
+    spec:
+      containers:
+        - name: admin
+          image: {{ .Values.admin.dep.image }}
+          imagePullPolicy: {{ .Values.admin.dep.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.admin.dep.containerPort }}
+          env:
+            - name: BIZ_URL
+              value: "{{ .Values.biz.svc.name }}"
+            - name: BIZ_PORT
+              value: "{{ .Values.biz.dep.containerPort }}"
+            - name: ADMIN_PORT
+              value: "{{ .Values.admin.dep.containerPort }}"

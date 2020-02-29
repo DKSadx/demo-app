@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.biz.dep.name }}
+spec:
+  replicas: {{ .Values.biz.dep.replicaCount }}
+  selector:
+    matchLabels:
+      name: {{ .Values.biz.dep.labelName }}
+  template:
+    metadata:
+      labels:
+        name: {{ .Values.biz.dep.labelName }}
+    spec:
+      containers:
+        - name: biz
+          image: {{ .Values.biz.dep.image }}
+          imagePullPolicy: {{ .Values.biz.dep.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.biz.dep.containerPort }}
+          env:
+            - name: BIZ_PORT
+              value: "{{ .Values.biz.dep.containerPort }}"
+            - name: DB_URL
+              value: "{{ .Values.biz.dep.dbURL }}"
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: db
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: password

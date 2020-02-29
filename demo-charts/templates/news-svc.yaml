@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.news.svc.name }}
+spec:
+  selector:
+    name: news
+  ports:
+    - protocol: TCP
+      port: {{ .Values.news.svc.port }}
+      nodePort: {{ .Values.news.svc.nodePort }}
+      name: news
+  type: {{ .Values.news.svc.type }}

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.website.dep.name }}
+spec:
+  replicas: {{ .Values.website.dep.replicaCount }}
+  selector:
+    matchLabels:
+      name: {{ .Values.website.dep.labelName }}
+  template:
+    metadata:
+      labels:
+        name: {{ .Values.website.dep.labelName }}
+    spec:
+      containers:
+        - name: website
+          image: {{ .Values.website.dep.image }}
+          imagePullPolicy: {{ .Values.website.dep.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.website.dep.containerPort }}
+          env:
+            - name: ADMIN_URL
+              value: "{{ .Values.minikubeIP }}"
+            - name: ADMIN_PORT
+              value: "{{ .Values.admin.svc.nodePort }}"
+            - name: NEWS_URL
+              value: "{{ .Values.minikubeIP }}"
+            - name: NEWS_PORT
+              value: "{{ .Values.news.svc.nodePort }}"
+            - name: WEBSITE_PORT
+              value: "{{ .Values.website.dep.containerPort }}"
