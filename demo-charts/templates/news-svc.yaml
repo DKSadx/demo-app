@@ -1,3 +1,4 @@
+{{- if .Values.news.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -11,3 +12,4 @@ spec:
       nodePort: {{ .Values.news.svc.nodePort }}
       name: news
   type: {{ .Values.news.svc.type }}
+{{- end }}

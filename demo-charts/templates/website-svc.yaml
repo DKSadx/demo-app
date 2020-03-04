@@ -1,3 +1,4 @@
+{{- if .Values.website.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -11,3 +12,4 @@ spec:
       nodePort: {{ .Values.website.svc.nodePort }}
       name: website
   type: {{ .Values.website.svc.type }}
+{{- end }}

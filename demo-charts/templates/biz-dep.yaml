@@ -1,3 +1,4 @@
+{{- if .Values.biz.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -24,9 +25,9 @@ spec:
             - containerPort: {{ .Values.biz.dep.containerPort }}
           env:
             - name: BIZ_PORT
-              value: "{{ .Values.biz.dep.containerPort }}"
+              value: {{ .Values.biz.dep.containerPort | quote }}
             - name: DB_URL
-              value: "{{ .Values.biz.dep.dbURL }}"
+              value: {{ .Values.biz.dep.dbURL | quote }}
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
@@ -42,3 +43,4 @@ spec:
                 secretKeyRef:
                   name: db-secrets
                   key: password
+{{- end }}

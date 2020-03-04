@@ -1,3 +1,4 @@
+{{- if .Values.website.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,12 +21,13 @@ spec:
             - containerPort: {{ .Values.website.dep.containerPort }}
           env:
             - name: ADMIN_URL
-              value: "{{ .Values.minikubeIP }}"
+              value: {{ .Values.minikubeIP | quote }}
             - name: ADMIN_PORT
-              value: "{{ .Values.admin.svc.nodePort }}"
+              value: {{ .Values.admin.svc.nodePort | quote }}
             - name: NEWS_URL
-              value: "{{ .Values.minikubeIP }}"
+              value: {{ .Values.minikubeIP | quote }}
             - name: NEWS_PORT
-              value: "{{ .Values.news.svc.nodePort }}"
+              value: {{ .Values.news.svc.nodePort | quote }}
             - name: WEBSITE_PORT
-              value: "{{ .Values.website.dep.containerPort }}"
+              value: {{ .Values.website.dep.containerPort | quote }}
+{{- end }}

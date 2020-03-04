@@ -1,9 +1,10 @@
+{{- if .Values.postgres.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.postgres.dep.name }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.postgres.dep.replicaCount }}
   selector:
     matchLabels:
       name: {{ .Values.postgres.dep.labelName }}
@@ -34,3 +35,4 @@ spec:
                 secretKeyRef:
                   name: db-secrets
                   key: db
+{{- end }}

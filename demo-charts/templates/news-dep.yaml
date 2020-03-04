@@ -1,3 +1,4 @@
+{{- if .Values.news.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,8 +21,10 @@ spec:
             - containerPort: {{ .Values.news.dep.containerPort }}
           env:
             - name: BIZ_URL
-              value: "{{ .Values.minikubeIP }}"
+              value: {{ .Values.minikubeIP | quote }}
+              #value: "{{ .Values.biz.svc.name }}"
             - name: BIZ_PORT
-              value: "{{ .Values.biz.svc.nodePort }}"
+              value: {{ .Values.biz.svc.port | quote }}
             - name: NEWS_PORT
-              value: "{{ .Values.news.dep.containerPort }}"
+              value: {{ .Values.news.dep.containerPort | quote }}
+{{- end }}

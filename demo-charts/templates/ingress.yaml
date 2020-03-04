@@ -1,0 +1,17 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: website-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: demoapp.abh
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: website-svc
+          servicePort: 9301
+{{- end }}

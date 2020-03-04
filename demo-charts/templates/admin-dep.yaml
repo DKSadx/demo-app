@@ -1,3 +1,4 @@
+{{- if .Values.admin.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,8 +21,9 @@ spec:
             - containerPort: {{ .Values.admin.dep.containerPort }}
           env:
             - name: BIZ_URL
-              value: "{{ .Values.biz.svc.name }}"
+              value: {{ .Values.biz.svc.name | quote }}
             - name: BIZ_PORT
-              value: "{{ .Values.biz.dep.containerPort }}"
+              value: {{ .Values.biz.dep.containerPort | quote }}
             - name: ADMIN_PORT
-              value: "{{ .Values.admin.dep.containerPort }}"
+              value: {{ .Values.admin.dep.containerPort | quote }}
+{{- end }}

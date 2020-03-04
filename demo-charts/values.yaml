@@ -1,5 +1,8 @@
 minikubeIP: 'http://192.168.99.113'
 
+ingress:
+  enabled: false
+
 secrets:
   username:
   password:
@@ -8,6 +11,7 @@ secrets:
 # ----- PostgreSQL -----
 
 postgres:
+  enabled: true
   dep:
     name: 'postgres'
     labelName: 'postgres'
@@ -23,6 +27,7 @@ postgres:
 # ----- Biz -----
 
 biz:
+  enabled: true
   dep:
     name: 'biz'
     labelName: 'biz'
@@ -34,12 +39,12 @@ biz:
   svc:
     name: 'biz-svc'
     port: '9001'
-    #nodePort: '30001'
     type: 'ClusterIP'
 
 # ----- Website -----
 
 website:
+  enabled: true
   dep:
     name: 'website'
     labelName: 'website'
@@ -56,6 +61,7 @@ website:
 # ----- Admin -----
 
 admin:
+  enabled: true
   dep:
     name: 'admin'
     labelName: 'admin'
@@ -72,6 +78,7 @@ admin:
 # ----- News -----
 
 news:
+  enabled: true
   dep:
     name: 'news'
     labelName: 'news'
