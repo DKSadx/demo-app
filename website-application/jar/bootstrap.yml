@@ -10,9 +10,9 @@ eureka.client:
 
 hazelcast.max.no.heartbeat.seconds: 60
 
-admin-application.url: ${ADMIN_URL}:${ADMIN_PORT}/ui/
+admin-application.url: ${ADMIN_URL}
 
-news-application.url: ${NEWS_URL}:${NEWS_PORT}/ui/
+news-application.url: ${NEWS_URL}
 
-vaadin.urlMapping: /ui/*
-server.servlet.context-path: /
+vaadin.urlMapping: /*
+server.servlet.context-path: /ui

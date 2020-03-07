@@ -9,7 +9,7 @@ spec:
   ports:
     - protocol: TCP
       port: {{ .Values.news.svc.port }}
-      nodePort: {{ .Values.news.svc.nodePort }}
+      targetPort: {{ .Values.news.svc.port }}
       name: news
   type: {{ .Values.news.svc.type }}
 {{- end }}

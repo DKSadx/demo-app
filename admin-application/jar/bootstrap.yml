@@ -23,5 +23,5 @@ hazelcast.max.no.heartbeat.seconds: 60
 
 biz-application.url: ${BIZ_URL}:${BIZ_PORT}
 
-vaadin.urlMapping: /ui/*
-server.servlet.context-path: /
+vaadin.urlMapping: /*
+server.servlet.context-path: /admin

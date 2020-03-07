@@ -21,10 +21,7 @@ spec:
             - containerPort: {{ .Values.news.dep.containerPort }}
           env:
             - name: BIZ_URL
-              value: {{ .Values.minikubeIP | quote }}
-              #value: "{{ .Values.biz.svc.name }}"
-            - name: BIZ_PORT
-              value: {{ .Values.biz.svc.port | quote }}
+              value: {{ .Values.url | quote }}
             - name: NEWS_PORT
               value: {{ .Values.news.dep.containerPort | quote }}
 {{- end }}

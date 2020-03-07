@@ -1,7 +1,7 @@
-minikubeIP: 'http://192.168.99.113'
+url: 'http://demoapp.abh'
 
 ingress:
-  enabled: false
+  enabled: true
 
 secrets:
   username:
@@ -44,6 +44,7 @@ biz:
 # ----- Website -----
 
 website:
+  websiteUrl: 'http://demoapp.abh/ui'
   enabled: true
   dep:
     name: 'website'
@@ -55,13 +56,13 @@ website:
   svc:
     name: 'website-svc'
     port: '9301'
-    nodePort: '30301'
-    type: 'LoadBalancer'
+    type: 'ClusterIP'
 
 # ----- Admin -----
 
 admin:
   enabled: true
+  adminUrl: 'http://demoapp.abh/admin'
   dep:
     name: 'admin'
     labelName: 'admin'
@@ -72,13 +73,13 @@ admin:
   svc:
     name: 'admin-svc'
     port: '9101'
-    nodePort: '30101'
-    type: 'LoadBalancer'
+    type: 'ClusterIP'
 
 # ----- News -----
 
 news:
   enabled: true
+  newsUrl: 'http://demoapp.abh/news'
   dep:
     name: 'news'
     labelName: 'news'
@@ -89,5 +90,4 @@ news:
   svc:
     name: 'news-svc'
     port: '9201'
-    nodePort: '30201'
-    type: 'LoadBalancer'
+    type: 'ClusterIP'

@@ -4,14 +4,22 @@ kind: Ingress
 metadata:
   name: website-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/app-root: /$1
 spec:
   rules:
   - host: demoapp.abh
     http:
       paths:
-      - path: /
+      - path: /ui
         backend:
           serviceName: website-svc
           servicePort: 9301
+      - path: /news
+        backend:
+          serviceName: news-svc
+          servicePort: 9201
+      - path: /admin
+        backend:
+          serviceName: admin-svc
+          servicePort: 9101
 {{- end }}

@@ -21,13 +21,9 @@ spec:
             - containerPort: {{ .Values.website.dep.containerPort }}
           env:
             - name: ADMIN_URL
-              value: {{ .Values.minikubeIP | quote }}
-            - name: ADMIN_PORT
-              value: {{ .Values.admin.svc.nodePort | quote }}
+              value: {{ .Values.admin.adminUrl | quote }}
             - name: NEWS_URL
-              value: {{ .Values.minikubeIP | quote }}
-            - name: NEWS_PORT
-              value: {{ .Values.news.svc.nodePort | quote }}
+              value: {{ .Values.news.newsUrl | quote }}
             - name: WEBSITE_PORT
               value: {{ .Values.website.dep.containerPort | quote }}
 {{- end }}

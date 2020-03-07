@@ -9,7 +9,7 @@ spec:
   ports:
     - protocol: TCP
       port: {{ .Values.website.svc.port }}
-      nodePort: {{ .Values.website.svc.nodePort }}
+      targetPort: {{ .Values.website.svc.port }}
       name: website
   type: {{ .Values.website.svc.type }}
 {{- end }}

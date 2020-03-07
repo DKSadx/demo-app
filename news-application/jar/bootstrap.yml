@@ -21,7 +21,7 @@ feign.hystrix.enabled: true
 
 hazelcast.max.no.heartbeat.seconds: 60
 
-biz-application.url: ${BIZ_URL}:${BIZ_PORT}
+biz-application.url: ${BIZ_URL}
 
-vaadin.urlMapping: /ui/*
-server.servlet.context-path: /
+vaadin.urlMapping: /*
+server.servlet.context-path: /news
