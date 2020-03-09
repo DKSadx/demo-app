@@ -1,7 +1,25 @@
 url: 'http://demoapp.abh'
 
+# ----- Ingress -----
+
 ingress:
   enabled: true
+  name: 'website-ingress'
+  host: 'demoapp.abh'
+  website:
+    path: "/ui"
+    serviceName: 'website-svc'
+    servicePort: '9301'
+  news:
+    path: "/news"
+    serviceName: 'news-svc'
+    servicePort: '9201'
+  admin:
+    path: "/admin"
+    serviceName: 'admin-svc'
+    servicePort: '9101'
+
+# ----- Secrets -----
 
 secrets:
   username:

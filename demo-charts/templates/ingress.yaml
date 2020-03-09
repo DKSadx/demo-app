@@ -2,24 +2,24 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: website-ingress
+  name: {{ .Values.ingress.name }}
   annotations:
     nginx.ingress.kubernetes.io/app-root: /$1
 spec:
   rules:
-  - host: demoapp.abh
+  - host: {{ .Values.ingress.host }}
     http:
       paths:
-      - path: /ui
+      - path: {{ .Values.ingress.website.path }}
         backend:
-          serviceName: website-svc
-          servicePort: 9301
-      - path: /news
+          serviceName: {{ .Values.ingress.website.serviceName }}
+          servicePort: {{ .Values.ingress.website.servicePort }}
+      - path: {{ .Values.ingress.news.path }}
         backend:
-          serviceName: news-svc
-          servicePort: 9201
-      - path: /admin
+          serviceName: {{ .Values.ingress.news.serviceName }}
+          servicePort: {{ .Values.ingress.news.servicePort }}
+      - path: {{ .Values.ingress.admin.path }}
         backend:
-          serviceName: admin-svc
-          servicePort: 9101
+          serviceName: {{ .Values.ingress.admin.serviceName }}
+          servicePort: {{ .Values.ingress.admin.servicePort }}
 {{- end }}
