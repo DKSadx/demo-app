@@ -63,7 +63,7 @@ biz:
 
 website:
   websiteUrl: 'http://demoapp.abh/ui'
-  enabled: true
+  enabled: false
   dep:
     name: 'website'
     labelName: 'website'
@@ -79,7 +79,7 @@ website:
 # ----- Admin -----
 
 admin:
-  enabled: true
+  enabled: false
   adminUrl: 'http://demoapp.abh/admin'
   dep:
     name: 'admin'
