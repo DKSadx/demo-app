@@ -4,6 +4,7 @@ node {
   stage('Build app') {
       // Stop and remove container if it exists
       sh "docker stop ${BUILD_CONTAINER_NAME} || true && docker rm ${BUILD_CONTAINER_NAME} || true"
+      sh " [ ! -d \"\$HOME/.m2\" ] && mkdir .m2 || true"
       sh '''
       docker run --name ${BUILD_CONTAINER_NAME} \
                  --mount type=bind,source=\$HOME/.m2,target=/root/.m2 \
