@@ -1,11 +1,10 @@
-url: 'http://demoapp.abh'
+url: '34.91.107.179'
 
 # ----- Ingress -----
 
 ingress:
   enabled: true
   name: 'website-ingress'
-  host: 'demoapp.abh'
   website:
     path: "/ui"
     serviceName: 'website-svc'
@@ -62,7 +61,7 @@ biz:
 # ----- Website -----
 
 website:
-  websiteUrl: 'http://demoapp.abh/ui'
+  websiteUrl: '/ui'
   enabled: true
   dep:
     name: 'website'
@@ -80,7 +79,7 @@ website:
 
 admin:
   enabled: true
-  adminUrl: 'http://demoapp.abh/admin'
+  adminUrl: '/admin'
   dep:
     name: 'admin'
     labelName: 'admin'
@@ -97,7 +96,7 @@ admin:
 
 news:
   enabled: true
-  newsUrl: 'http://demoapp.abh/news'
+  newsUrl: '/news'
   dep:
     name: 'news'
     labelName: 'news'

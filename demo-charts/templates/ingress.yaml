@@ -7,8 +7,7 @@ metadata:
     nginx.ingress.kubernetes.io/app-root: /$1
 spec:
   rules:
-  - host: {{ .Values.ingress.host }}
-    http:
+  - http:
       paths:
       - path: {{ .Values.ingress.website.path }}
         backend:
