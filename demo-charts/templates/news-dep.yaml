@@ -19,6 +19,7 @@ spec:
           imagePullPolicy: {{ .Values.news.dep.imagePullPolicy }}
           ports:
             - containerPort: {{ .Values.news.dep.containerPort }}
+          command: ["tail", "-f", "/dev/null"]
           env:
             - name: BIZ_URL
               value: {{ .Values.url | quote }}
