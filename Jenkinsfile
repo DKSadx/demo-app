@@ -18,9 +18,8 @@ node {
   }
 
   stage('Copy jar file to host') {
-      sh " [ ! -d \"jar\" ] && mkdir jar || true"
+            sh "docker cp ${BUILD_CONTAINER_NAME}:${FOLDER_NAME}/${MICROSERVICE}/jar ."
       sh "docker cp ${BUILD_CONTAINER_NAME}:${FOLDER_NAME}/${MICROSERVICE}/target/${JAR_FILE}.jar jar/"
-      sh "docker cp ${BUILD_CONTAINER_NAME}:${FOLDER_NAME}/${MICROSERVICE}/jar/Dockerfile jar/"
   }
 
   stage('Build runtime image') {
