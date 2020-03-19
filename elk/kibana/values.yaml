@@ -87,9 +87,10 @@ updateStrategy:
   type: "Recreate"
 
 service:
-  type: ClusterIP
+  #type: ClusterIP
+  type: LoadBalancer
   port: 5601
-  nodePort: ""
+  nodePort: 32222
   labels: {}
   annotations: {}
     # cloud.google.com/load-balancer-type: "Internal"
@@ -135,4 +136,3 @@ lifecycle: {}
   # postStart:
   #   exec:
   #     command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
-
