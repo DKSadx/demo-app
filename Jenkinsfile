@@ -4,6 +4,7 @@ node {
   stage('Build app') {
       // Stop and remove container if it exists
       sh "docker stop ${BUILD_CONTAINER_NAME} || true && docker rm ${BUILD_CONTAINER_NAME} || true"
+      sh " [ ! -d \"\$HOME/.m2\" ] && mkdir -p \$HOME/.m2 || true"
       sh '''
       docker run --name ${BUILD_CONTAINER_NAME} \
                  --mount type=bind,source=\$HOME/.m2,target=/root/.m2 \
@@ -18,7 +19,7 @@ node {
   }
 
   stage('Copy jar file to host') {
-            sh "docker cp ${BUILD_CONTAINER_NAME}:${FOLDER_NAME}/${MICROSERVICE}/jar ."
+      sh "docker cp ${BUILD_CONTAINER_NAME}:${FOLDER_NAME}/${MICROSERVICE}/jar ."
       sh "docker cp ${BUILD_CONTAINER_NAME}:${FOLDER_NAME}/${MICROSERVICE}/target/${JAR_FILE}.jar jar/"
   }
 
