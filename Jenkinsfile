@@ -1,5 +1,8 @@
+properties([pipelineTriggers([githubPush()])])
+
 node {
   def build
+  git url: '${GITHUB_REPO}', branch: '${TRIGGER_BRANCH}'
 
   stage('Build app') {
       // Stop and remove container if it exists
