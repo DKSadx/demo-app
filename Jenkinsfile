@@ -4,17 +4,16 @@ node {
   stage('Build app') {
       // Stop and remove container if it exists
       sh "docker stop ${BUILD_CONTAINER_NAME} || true && docker rm ${BUILD_CONTAINER_NAME} || true"
-      sh " [ ! -d \"\$HOME/.m2\" ] && mkdir -p \$HOME/.m2 || true"
       sh '''
-      docker run --name ${BUILD_CONTAINER_NAME} \
-                 --mount type=bind,source=\$HOME/.m2,target=/root/.m2 \
-                 -e GITHUB_REPO=${GITHUB_REPO} \
-                 -e FOLDER_NAME=${FOLDER_NAME} \
-                 -e BRANCH_NAME=${BRANCH_NAME} \
-                 -e MICROSERVICE=${MICROSERVICE} \
-                 -e UID=\$(id -u) \
-                 -e GID=\$(id -g) \
-                 build:v1
+        docker run --name ${BUILD_CONTAINER_NAME} \
+                   --mount type=bind,source=\$HOST_HOME_PATH/.m2,target=/root/.m2 \
+                   -e GITHUB_REPO=${GITHUB_REPO} \
+                   -e FOLDER_NAME=${FOLDER_NAME} \
+                   -e BRANCH_NAME=${BRANCH_NAME} \
+                   -e MICROSERVICE=${MICROSERVICE} \
+                   -e UID=\$(id -u) \
+                   -e GID=\$(id -g) \
+                   ${BUILD_IMAGE_NAME}:${BUILD_IMAGE_TAG}
       '''
   }
 
@@ -24,7 +23,7 @@ node {
   }
 
   stage('Build runtime image') {
-    sh "cd jar && docker build -t ${DEPLOY_IMAGE_NAME}:${DEPLOY_IMAGE_TAG} ."
+     sh "cd jar && docker build -t ${DEPLOY_IMAGE_NAME}:${DEPLOY_IMAGE_TAG} ."
   }
 
   stage('Tag and push the image to docker hub') {
