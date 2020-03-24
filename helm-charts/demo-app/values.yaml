@@ -47,7 +47,7 @@ biz:
     name: 'biz'
     labelName: 'biz'
     replicaCount: 1
-    image: 'dkabh/biz:run'
+    image: 'dkabh/biz-deploy:v1.0'
     imagePullPolicy: 'IfNotPresent'
     containerPort: '9001'
     dbURL: 'jdbc:postgresql://postgres-svc:5432'
@@ -65,7 +65,7 @@ website:
     name: 'website'
     labelName: 'website'
     replicaCount: 1
-    image: 'dkabh/website:run'
+    image: 'dkabh/website-deploy:v1.0'
     imagePullPolicy: 'IfNotPresent'
     containerPort: '9301'
   svc:
@@ -82,7 +82,7 @@ admin:
     name: 'admin'
     labelName: 'admin'
     replicaCount: 1
-    image: 'dkabh/admin:run'
+    image: 'dkabh/admin-deploy:v1.0'
     imagePullPolicy: 'IfNotPresent'
     containerPort: '9101'
   svc:
@@ -99,7 +99,7 @@ news:
     name: 'news'
     labelName: 'news'
     replicaCount: 1
-    image: 'dkabh/news:run'
+    image: 'dkabh/news-deploy:v1.0'
     imagePullPolicy: 'IfNotPresent'
     containerPort: '9201'
   svc:
