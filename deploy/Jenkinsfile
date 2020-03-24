@@ -1,0 +1,25 @@
+properties([pipelineTriggers([githubPush()])])
+
+node {
+  def deploy
+  git url: '${GITHUB_REPO}', branch: '${TRIGGER_BRANCH}'
+
+  stage('Clone repository') {
+    sh '''
+      git clone ${GITHUB_REPO} && cd ${FOLDER_NAME}
+      git checkout ${BRANCH_NAME}
+    '''
+  }
+
+  stage('Upgrade demo-app helm chart') {
+    dir("${env.WORKSPACE}/${FOLDER_NAME}") {
+      sh '''
+        helm upgrade ${CHART_NAME} ${CHART_PATH} \
+          --set=admin.dep.image=${ADMIN_NAME}:${ADMIN_TAG} \
+          --set=biz.dep.image=${BIZ_NAME}:${BIZ_TAG} \
+          --set=website.dep.image=${WEBSITE_NAME}:${WEBSITE_TAG} \
+          --set=news.dep.image=${NEWS_NAME}:${NEWS_TAG}
+      '''
+    }
+  }
+}
