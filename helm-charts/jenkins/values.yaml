@@ -424,7 +424,7 @@ agent:
   enabled: true
   #image: "jenkins/jnlp-slave"
   #tag: "3.27-1"
-  image: "joao29a/jnlp-slave-alpine-docker"
+  image: "dkabh/jnlp-slave-alpine-docker-helm-v2"
   tag: "latest"
   customJenkinsLabels: []
   # name of the secret to be used for image pulling
