@@ -450,7 +450,7 @@ agent:
   # Pod-wide ennvironment, these vars are visible to any container in the agent pod
   envVars: 
     - name: HOST_HOME_PATH
-      value: "/root"
+      value: "<HOST_HOME_PATH>"
   volumes: 
   # - type: Secret
   #   secretName: mysecret
