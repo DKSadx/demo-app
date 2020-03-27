@@ -65,7 +65,7 @@ pipeline {
         sh '''
           git clone ${GITHUB_REPO} && cd ${FOLDER_NAME}
           git checkout ${BRANCH_NAME}
-          helm upgrade ${CHART_NAME} ${CHART_PATH} --set=${MS_NAME}.dep.image=${DEPLOY_IMAGE_NAME}:${DEPLOY_IMAGE_TAG}
+          helm upgrade ${CHART_NAME} ${CHART_PATH} --set=${MS_NAME}.dep.image=${DOCKER_HUB_USER}/${DEPLOY_IMAGE_NAME}:${DEPLOY_IMAGE_TAG}
         '''
       }
     }
