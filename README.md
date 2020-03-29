@@ -1,71 +1,230 @@
-K8s secrets.yaml
+# DevOps workflow for Java (Vaadin) app - microservices
+<hr />
 
-```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: db-secrets
-type: Opaque
-data:
-  username: _____(base64)
-  password: _____(base64)
-  db: _____(base64)
+Table of contents
+=================
+
+<!--ts-->
+   * [Description](#Description)
+   * [Requirements](#Requirements)
+   * [Setup](#Setup)
+   * [Installation](#Installation)
+     * [Automatic](#Automatic)
+     * [Manual](#Manual)
+        * [Demo-app](#Demo-app)
+        * [Jenkins](#Jenkins)
+          * [Environment setup](#Environment-setup)
+          * [Build and deploy pipelines](#Build-and-deploy-pipelines)
+          * [SonarQube job](#SonarQube-job)
+          * [WebHooks](#WebHooks)
+        * [SonarQube](#SonarQube)
+        * [Monitoring](#Monitoring)
+          * [Elasticsearch](#Elasticsearch)
+          * [Filebeat](#Filebeat)
+          * [Kibana](#Kibana)
+<!--te-->
+
+## Description:
+
+- Every component is deployed with Helm (Kubernetes)
+- On every pull request, GitHub will trigger Jenkins via a webhook and Jenkins will start the SonarQube code quality checks.
+- After every new release (on GitHub), Jenkins will build the new Docker images, push them to Docker Hub and upgrade the app to a new version.
+- Elastic stack is used for monitoring the logs.
+
+
+## Requirements:
+
+- Kubernetes cluster
+
+- Helm v2.1x.x with **tiller** already deployed
+
+- curl (optional)
+
+## Setup
+
+```sh
+# Clone the repository
+git clone https://github.com/DKSadx/demo-app.git && cd demo-app/
+# Checkout v1 branch
+git checkout v1
 ```
 
-# Microservices with Vaadin demo application
+Installation
+============
+<hr />
 
-## Build the app
+## Automatic:
 
-Run the following from the command line:
+Run the `install.sh` script and all the components will be installed
 
-```
-git clone https://github.com/momerkic/demo-app.git
-cd demo-app
-mvn clean install
-```
-
-## Running the app/services
-
-Ensure that postgresql-10 is running. Create user demo with password 'demo'. Create database 'demo' with owner demo.
-
-Use multiple terminals to perform the following steps:
-
-**1) Start an instance of the `biz-application` microservice (REST app):**
-
-```
-cd demo-app/biz-application
-java -jar target/biz-application-0.0.1-SNAPSHOT.jar
+```sh
+./install.sh
 ```
 
-**2) Start an instance of the `admin-application` microservice (Vaadin app):**
+## Manual:
 
+```sh
+cd helm-charts/
 ```
-cd demo-app/admin-application
-java -jar target/admin-application-0.0.1-SNAPSHOT.jar
+<br />
+
+*NOTE: You can change the default chart values inside the `helm-charts/CHART_NAME/values.yaml` file*
+
+## Demo-app
+
+
+Install the demo-app chart
+
+```sh
+helm install -f demo-app/values.yaml ./demo-app --name demo-app --namespace demo-app
+```
+<br />
+
+## Jenkins
+
+<hr />
+
+### Environment setup
+
+
+Change the read and write permissions for docker.sock (required if using Jenkins with Docker)
+
+```sh
+chmod 666 /var/run/docker.sock
 ```
 
-**3) Start an instance of the `news-application` microservice (Vaadin app):**
+Set hosts **$HOME** path as an environment variable inside Jenkins slave container (required for .m2 caching)
 
-```
-cd demo-app/news-application
-java -jar target/news-application-0.0.1-SNAPSHOT.jar
-```
-
-**4) Start an instance of the `website-application` microservice (Vaadin app):**
-
-```
-cd demo-app/website-application
-java -jar target/website-application-0.0.1-SNAPSHOT.jar
+```sh
+sed -i 's@<HOST_HOME_PATH>@'"$HOME"'@' ./jenkins/values.yaml
 ```
 
-## Using the app
+Create ClusterRoleBinding for Jenkins (required if using kubectl or helm with Jenkins)
 
-**1) Point your browser to <http://localhost:9301/ui/>.**
+```sh
+kubectl create clusterrolebinding permissive-binding --clusterrole=cluster-admin --user=admin --user=kubelet --group=system:serviceaccounts:jenkins
+```
 
-You'll see the `website-application` embedding the `admin-application` and the `news-application` microservices.
+Install Jenkins chart with custom values
 
-**2) Add, update, or delete data.**
+```sh
+helm install -f jenkins/values.yaml stable/jenkins --name jenkins --namespace jenkins
+```
 
-Latest tweets from the companies you enter on the left (the `admin-application`) will be rendered on the right (the `news-application`).
+### Build and deploy pipelines
 
-The `admin-application`, and `news-application` instances (implemented with Vaadin) delegate CRUD operations to the `biz-application`.
+Required plugin: Generic Webhook Trigger Plugin
+
+Pull the build image:
+```sh
+docker pull dkabh/build:v1
+```
+
+Create a Jenkins pipeline and use this repository as SCM for the Jenkinsfile
+
+Define these parameters inside the pipeline job:
+
+| Parameters   | Example
+|----------|:-------------:
+|MS_NAME  | admin
+|FOLDER_NAME  | demo-app
+|GITHUB_REPO  | https://github.com/DKSadx/demo-app.git
+|MICROSERVICE  | admin-application
+|BRANCH_NAME  | v1
+|BUILD_IMAGE_NAME  | build
+|BUILD_IMAGE_TAG  | v1
+|BUILD_CONTAINER_NAME  | buildA
+|DEPLOY_IMAGE_NAME  | admin-deploy
+|JAR_FILE  | admin-application-0.0.1-SNAPSHOT
+|DOCKER_HUB_USER  | [username or repo]
+|DOCKER_HUB_CREDENTIALS  | [jenkins credentials id]
+|CHART_NAME  | demo-app
+|CHART_PATH  | ./helm-charts/demo-app
+
+<br />
+
+### SonarQube job
+
+Required plugin: GitHub Pull Request Builder
+
+Pull the SonarQube build image:
+```sh
+docker pull dkabh/sq:v1
+```
+
+Create a freestyle job, add a new build step (execute shell) and paste the code from `./helm-charts/sonarqube/jenkinsJob` into the input field
+
+| Parameters   | Example
+|----------|:-------------:
+|FOLDER_NAME  | demo-app
+|BUILD_CONTAINER_NAME  | buildSQ
+|BUILD_IMAGE_NAME  | dkabh/sq
+|BUILD_IMAGE_TAG  | v1
+|PROJECT_NAME  | [SQ_PROJECT_NAME]
+|PROJECT_URL  | [SQ_URL]
+|PROJECT_LOGIN  | [SQ_LOGIN_TOKEN]
+
+<br />
+
+### WebHooks
+
+_**1. For releases**_
+
+Add a new webhook in the github repository settings and point it to the Jenkins public ip
+`JENKINS_PUBLIC_IP/generic-webhook-trigger/invoke?token=TOKEN_HERE`
+
+_**2. For pull requests**_
+
+Add a new webhook in the github repository settings and point it to the Jenkins public ip
+`JENKINS_PUBLIC_IP/ghprbhook/`
+
+<br />
+
+## SonarQube
+
+Plugins installed:
+  - SonarJava
+  - Java I18n Rules
+
+Add SonarQube repository (stable/sonarqube is deprecated)
+```sh
+helm repo add oteemocharts https://oteemo.github.io/charts
+```
+
+Install SonarQube with custom values
+
+```sh
+helm install -f sonarqube/values.yaml oteemocharts/sonarqube --name sonarqube --namespace sonarqube
+```
+
+<br />
+
+Monitoring
+============
+
+Add elastic repository:
+
+```sh
+helm repo add elastic https://helm.elastic.co
+```
+
+Install Elasticsearch, Filebeat and Kibana
+
+
+### Elasticsearch
+
+```sh
+helm install -f elasticsearch/values.yaml elastic/elasticsearch --name elasticsearch --namespace monitoring
+```
+
+### Filebeat
+
+```sh
+helm install -f filebeat/values.yaml elastic/filebeat --name filebeat --namespace monitoring
+```
+
+### Kibana
+
+```sh
+helm install -f kibana/values.yaml elastic/kibana --name kibana --namespace monitoring
+```
